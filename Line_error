@@ -1,0 +1,116 @@
+#include "utility.h"
+using namespace std;
+#define MIN_INFY -858993460.0
+#define MXX_INFY 858993460.0
+class Points {
+private:
+float x;
+      float y;
+public:
+      Points() {
+            x = 0;
+y = 0; }
+      Points(float x, float y) {
+            this->x = x;
+this->y = y; }
+      float X() {
+            return x;
+}
+float Y() {
+return y; }
+};
+float evaluateErrorLineValue(vector<Points>points, float** X, float** Y, int x, int
+e, int n) {
+      float sum_xy = 0.0;
+      float sum_y = 0.0;
+      float sum_xSquare = 0.0;
+      float sum_x = 0.0;
+      for (int i = x;i <= e;i++) {
+            sum_xy = sum_xy + (points[i].X() * points[i].Y());
+            sum_y = sum_y + points[i].Y();
+            sum_xSquare = sum_xSquare + (points[i].X() * points[i].X());
+            sum_x = sum_x + points[i].X();
+      }
+      float numerator = (float)n * sum_xy - (sum_x * sum_y);
+      float denominator = (float)n * sum_xSquare - (sum_x * sum_x);
+      float s = 0.0;
+      if (numerator != 0 && denominator != 0) {
+            s = (float)numerator / denominator;
+      }
+      float z = sum_y - s * sum_x;
+      z = (float)z / n;
+      float distance = 0.0;
+      for (int i = x;i <= e;i++) {
+            float dist = (points[i].Y() - (s * points[i].X() + z));
+            distance = distance + dist * dist;
+      }
+      X[x][e] = s;
+      Y[x][e] = z;
+      return distance;
+}
+int main() {
+ifstream file;
+
+i + 1);
+for (int j = i;j < length;j++) {
+      if (i == j) {
+            err[i][j] = 0;
+      }
+      else {
+            err[i][j] = evaluateErrorLineValue(points, x, y, i, j, j -
+} }
+file.open("points.txt");
+vector<Points> points;
+if (file) {
+      float exp;
+      while (file >> exp) {
+} }
+float x;
+file >> x;
+Points p(exp, x);
+points.push_back(p);
+int length = points.size();
+float C = 1;
+auto** x = new float* [length];
+auto** y = new float* [length];
+auto** err = new float* [length];
+for (int i = 0;i < length;++i) {
+      x[i] = new float[length];
+      y[i] = new float[length];
+      err[i] = new float[length];
+}
+for (int i = 0;i < length;i++) {
+}
+  auto* N = new float[length + 1];
+  int* index = new int[length + 1];
+  N[0] = 0;
+  N[1] = 0;
+  index[0] = MIN_INFY;
+  index[1] = MIN_INFY;
+  for (int i = 1;i < length;++i) {
+        float minimum = MXX_INFY;
+        int indice = -1;
+        for (int j = 0;j < i;++j) {
+              float cminimun = err[j][i] + C + N[j + 1];
+              if (cminimun < minimum) {
+                    minimum = cminimun;
+indice = j; }
+        }
+        N[i + 1] = minimum;
+        index[i + 1] = indice + 1;
+  }
+  cout << "i OPT(i) breakpoint j " << endl;
+  for (int i = 0;i <= length;i++) {
+        cout << i << "  " << N[i] << "  " << index[i] << endl;
+  }
+  cout<<endl;
+  int toPoint = length;
+  int fromPoint = index[length];
+  while (toPoint != -1 && fromPoint != MIN_INFY) {
+
+            cout << fromPoint << " to " << toPoint << " line segment is: y= " <<
+x[fromPoint - 1][toPoint - 1] << " x+ " << y[fromPoint - 1][toPoint - 1] << endl;
+            toPoint = fromPoint;
+            fromPoint = index[toPoint];
+      }
+return 0; }
