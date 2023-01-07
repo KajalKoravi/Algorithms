@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+//Program1
+int findPeakElement(vector<int> V, int low, int high)
+{
+  //check basic condition as low must be lower than high
+  if(low < high){
+    int mid = (low + high)/2;
+    //check if mid is peak element
+    if(V[mid-1]< V[mid] and V[mid] > V[mid+1])
+return mid;
+      //to check if peak element is on increasing side
+      else if(V[mid-1] < V[mid] and V[mid] < V[mid+1])
+        return findPeakElement(V, mid+1, high);
+      //to check if peak element is on decreasing side
+      else if(V[mid-1] > V[mid] and V[mid] > V[mid+1])
+      return findPeakElement(V, low, mid-1);
+else
+return -1; }
+else
+return -1; }
+// main function
+int main()
+{
+int input;
+      cout << "Enter the elements for the vector: \n";
+   vector<int> v;
+   // add vector to take input elements
+   while(cin>>input)
+   {
+       v.push_back(input);
+   }
+   //print elements
+   cout<< "Entered elements:";
+   for(auto &p : v)
+   {
+      cout<<p<<" ";
+   }
+   cout<<endl;
+   int vectorLength = v.size();
+   int peakIndex =findPeakElement(v, 0, vectorLength - 1);
+      cout << "The peak element is at index (index starts at 0): \n "
+            << peakIndex;
+      cout << "\n The peak element value is (index starts at 0): \n "
+            << v[peakIndex];
+return 0; }
