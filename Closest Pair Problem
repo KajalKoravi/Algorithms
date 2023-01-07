@@ -1,0 +1,113 @@
+#include </uploads/utility.h>
+using namespace std;
+// class to collect x and y co ordinates as a object
+class Point
+{
+public:
+float x, y; };
+// sorting array according to X coordinates
+int compare_X(const void* a, const void* b)
+{
+    Point *p1 = (Point *)a, *p2 = (Point *)b;
+    return (p1->x - p2->x);
+}
+// sorting array according to X coordinates
+int compare_Y(const void* a, const void* b)
+{
+    Point *p1 = (Point *)a, *p2 = (Point *)b;
+    return (p1->y - p2->y);
+}
+// function to find the distance between two points
+float getDistance(Point p1, Point p2)
+{
+    return sqrt( (p1.x - p2.x)*(p1.x - p2.x) +
+); }
+(p1.y - p2.y)*(p1.y - p2.y)
+// method to return the smallest distance between two points in P[] of size n when
+having there are 2 or 3 points
+float bruteForceSolution(Point P[], int n)
+{
+    float min = FLT_MAX;
+    for (int i = 0; i < n; ++i)
+        for (int j = i+1; j < n; ++j)
+            if (getDistance(P[i], P[j]) < min)
+return min; }
+min = getDistance(P[i], P[j]);
+//function to find minimum of two float values
+float min(float x, float y)
+{
+    return (x < y)? x : y;
+}
+float stripClosestPoints(Point strip[], int size, float d)
+{
+    float min = d;
+    qsort(strip, size, sizeof(Point), compare_Y);
+    // finding if difference between y coordinates is smaller than d.
+
+    for (int i = 0; i < size; ++i)
+        for (int j = i+1; j < size && (strip[j].y - strip[i].y) < min; ++j)
+            if (getDistance(strip[i],strip[j]) < min)
+                min = getDistance(strip[i], strip[j]);
+return min; }
+//function to find the smallest distance.
+float closest_Util(Point P[], int n)
+{
+if (n <= 3)
+        return bruteForceSolution(P, n);
+    // finding midpoint
+    int mid = n/2;
+    Point midPoint = P[mid];
+    // calculating dl distance from left and rigt side of vertical strip
+    float dl = closest_Util(P, mid);
+    float dr = closest_Util(P + mid, n - mid);
+    // Find the smallest of two distances
+    float d = min(dl, dr);
+    //creating vertical strip[] with distance d from left and right side of
+midpoint
+    Point verticalStrip[n];
+    int j = 0;
+    for (int i = 0; i < n; i++)
+        if (abs(P[i].x - midPoint.x) < d)
+            verticalStrip[j] = P[i], j++;
+    // Finding the closest points in strip.
+    return min(d, stripClosestPoints(verticalStrip, j, d) );
+}
+//function to find the smallest distance
+float closest(Point P[], int n)
+{
+    qsort(P, n, sizeof(Point), compare_X);
+    return closest_Util(P, n);
+}
+int main(int argc, const char * argv[])
+{
+    string line;
+    int count=0;
+    ifstream mFile("/uploads/points.txt", ios::in);;
+    if(mFile.is_open())
+    {
+        while(mFile.peek()!=EOF)
+        {
+            getline(mFile, line);
+count++; }
+
+        mFile.close();
+        cout<<"Number of lines in the file : "<<count<<endl;
+    }
+    else
+        cout<<"Couldn't open the file\n";
+    bool going=true;
+    ifstream in("/uploads/points.txt", ios::in);
+    int test;
+    float a, b;
+    Point P[count];
+    int x=0;
+    while (going==true && in>>a && in>>b){
+        cin>>a>>b;
+        Point c ={ a, b};
+        P[x]=c;
+        x++;
+    }
+    int n = sizeof(P) / sizeof(P[0]);
+    cout << "The smallest distance between closest pair is " << closest(P, n);
+    return 0;
+}
